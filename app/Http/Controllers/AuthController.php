@@ -13,13 +13,13 @@ class AuthController extends Controller
     // РЕГИСТРАЦИЯ
     // ========================================
 
-    // Показать страницу регистрации (GET запрос)
+    // Показать страницу регистрации
     public function showRegister()
     {
         return view('auth.register');
     }
 
-    // Обработать форму регистрации (POST запрос)
+    // Обработать форму регистрации
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -45,7 +45,7 @@ class AuthController extends Controller
     // АВТОРИЗАЦИЯ
     // ========================================
 
-    // Показать страницу логина (GET запрос)
+    // Показать страницу логина
     public function showLogin()
     {
         return view('auth.login');
@@ -66,8 +66,7 @@ class AuthController extends Controller
             return redirect()->route('conversations.index');
         }
 
-        // Если данные неверные — возвращаем назад с ошибкой.
-        // withErrors() кладёт ошибку в $errors в шаблоне.
+        // Если данные неверные - возвращаем назад с ошибкой.
         return back()->withErrors([
             'email' => 'Неверный email или пароль.',
         ]);
