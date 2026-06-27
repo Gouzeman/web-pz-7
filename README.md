@@ -63,19 +63,32 @@
 
 ## Структура проекта
 
+## Структура проекта
+
 ```text
-app/
-  Http/Controllers/      # контроллеры авторизации, диалогов и сообщений
-  Models/                # модели приложения
+app/Http/Controllers/
+  AuthController.php            # регистрация, вход, выход пользователя
+  ConversationController.php    # список диалогов, открытие/создание диалога, поиск пользователей
+  MessageController.php         # отправка сообщений, загрузка файлов, получение новых сообщений
 
-database/
-  migrations/            # миграции таблиц
+app/Models/
+  User.php                      # пользователь
+  Conversation.php              # диалог между пользователями
+  Message.php                   # сообщение
 
-resources/
-  views/                 # Blade-шаблоны
+database/migrations/
+  ...create_users_table.php
+  ...create_conversations_table.php
+  ...create_messages_table.php
+  ...create_conversations_user_table.php
+
+resources/views/
+  auth/                         # страницы регистрации и входа
+  Conversations/                # страницы списка диалогов и чата
+  layouts/                      # общий layout
 
 routes/
-  web.php                # маршруты приложения
+  web.php                       # маршруты авторизации, диалогов и AJAX-запросов
 ```
 
 ## Установка и запуск
