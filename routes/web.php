@@ -24,26 +24,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/conversations/poll', function () {
-        $conversations = Auth::user()
-            ->conversations()
-            ->with(['users', 'latestMessage.user'])
-            ->get()
-            ->filter(fn($c) => $c->latestMessage !== null) // только диалоги с сообщениями
-            ->map(function ($conv) {
-                $other = $conv->getOtherUser(Auth::id());
-                return [
-                    'id'          => $conv->id,
-                    'other_name'  => $other->name,
-                    'last_body'   => $conv->latestMessage->body ?? 'Файл',
-                    'last_time'   => $conv->latestMessage->created_at->format('H:i'),
-                    'is_mine'     => $conv->latestMessage->user_id === Auth::id(),
-                ];
-            })
-            ->values(); // переиндексировать массив после filter
-
-        return response()->json($conversations);
-    })->name('conversations.poll');
+    // запрос на вывод диалогов
+    Route::get('/conversations/poll', [ConversationController::class, 'poll'])->name('conversations.poll');
 
     // Список диалогов
     Route::get('/conversations', [ConversationController::class, 'index'])->name('conversations.index');

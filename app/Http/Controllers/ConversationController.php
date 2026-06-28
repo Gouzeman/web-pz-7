@@ -57,6 +57,28 @@ class ConversationController extends Controller
         return redirect()->route('conversations.show', $conversation);
     }
 
+    //
+    public function poll() {
+        $conversations = Auth::user()
+            ->conversations()
+            ->with(['users', 'latestMessage.user'])
+            ->get()
+            ->filter(fn($c) => $c->latestMessage !== null) // только диалоги с сообщениями
+            ->map(function ($conv) {
+                $other = $conv->getOtherUser(Auth::id());
+                return [
+                    'id'          => $conv->id,
+                    'other_name'  => $other->name,
+                    'last_body'   => $conv->latestMessage->body ?? 'Файл',
+                    'last_time'   => $conv->latestMessage->created_at->format('H:i'),
+                    'is_mine'     => $conv->latestMessage->user_id === Auth::id(),
+                ];
+            })
+            ->values(); // переиндексировать массив после filter
+
+        return response()->json($conversations);
+    }
+
     // AJAX: поиск пользователей для нового диалога
     public function searchUsers(Request $request)
     {
